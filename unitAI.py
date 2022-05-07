@@ -1,3 +1,4 @@
+from tkinter.ttk import LabelFrame
 import speech_recognition as sr # recognise speech
 #import playsound # to play an audio file
 from gtts import gTTS # google text to speech
@@ -14,11 +15,12 @@ import bs4 as bs
 import pyautogui
 import urllib.request
 import tkinter as tk
-from tkinter import filedialog, Text
+from tkinter import *
 import tkinter.scrolledtext
 
 
 def runAI():
+    runProgram.destroy
     engine = pyttsx3.init(driverName = 'sapi5')
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[1].id)
@@ -54,12 +56,8 @@ def runAI():
             except sr.RequestError:
                 speak('Sorry, the service is down') # error: recognizer is not connected
             message = (f">> {voice_data.lower()} \n")
-            frame.config(state='normal')
-            frame.insert('end', message)
-            frame.yview('end')
-            frame.config(state='disabled')
-            #text = tk.Label(frame, text=message,fg="#33C518", bg="#1C2833")
-            #text.pack()
+            #text = tk.Label(frame, text=message,fg="#e8e8e8",bg="#141414")
+            #text.grid(row=0,column=0)
             print(f">> {voice_data.lower()}") # print what user said
             return voice_data.lower()
 
@@ -75,11 +73,9 @@ def runAI():
 
     def speak(audio):
         engine.say(audio)
-        message = "U.N.I.T: " + audio +"\n"
-        frame.config(state='normal')
-        frame.insert('end', message)
-        frame.yview('end')
-        frame.config(state='disabled')
+        message = audio +"\n"
+        text = tk.Label(frame, text=message,fg="#e8e8e8",bg="#141414")
+        text.grid(row=0,column=0)
         #text = tk.Label(frame, text=message,fg="#33C518", bg="#1C2833")
         #text.pack()
         print(f"U.N.I.T: {audio}\n")
@@ -98,6 +94,9 @@ def runAI():
                 speak(f"my name is {unit_obj.name}, {person_obj.name}")
             else:
                 speak("my name is UNIT, pretty cool right? What's yours?")
+
+        if there_exists(["who is dennis"]):
+            speak(f"Dennis is the little bitch that has to build my body which is taking forever to complete. Tell him to hurry up")
 
         if there_exists(["my name is"]):
             person_name = voice_data.split("is")[-1].strip()
@@ -119,75 +118,12 @@ def runAI():
             time = f'{hours} {minutes}'
             speak(time)
 
-        # 5: search google
-        if there_exists(["search for"]) and 'youtube' not in voice_data:
-            search_term = voice_data.split("for")[-1]
-            url = f"https://google.com/search?q={search_term}"
-            webbrowser.get().open(url)
-            speak(f'Here is what I found for {search_term} on google')
-
-        # 6: search youtube
-        if there_exists(["youtube"]):
-            search_term = voice_data.split("for")[-1]
-            url = f"https://www.youtube.com/results?search_query={search_term}"
-            webbrowser.get().open(url)
-            speak(f'Here is what I found for {search_term} on youtube')
-
-        # 7: get stock price
-        if there_exists(["price of"]):
-            search_term = voice_data.lower().split(" of ")[-1].strip() #strip removes whitespace after/before a term in string
-            stocks = {
-                "apple":"AAPL",
-                "microsoft":"MSFT",
-                "facebook":"FB",
-                "tesla":"TSLA",
-                "bitcoin":"BTC-USD"
-            }
-            try:
-                stock = stocks[search_term]
-                stock = yf.Ticker(stock)
-                price = stock.info["regularMarketPrice"]
-
-                speak(f'price of {search_term} is {price} {stock.info["currency"]} {person_obj.name}')
-            except:
-                speak('oops, something went wrong')
-
         #8: get weather
         if there_exists(["weather"]):
             search_term = voice_data.split("for")[-1]
             url = "https://www.google.com/search?sxsrf=ACYBGNSQwMLDByBwdVFIUCbQqya-ET7AAA%3A1578847393212&ei=oUwbXtbXDN-C4-EP-5u82AE&q=weather&oq=weather&gs_l=psy-ab.3..35i39i285i70i256j0i67l4j0i131i67j0i131j0i67l2j0.1630.4591..5475...1.2..2.322.1659.9j5j0j1......0....1..gws-wiz.....10..0i71j35i39j35i362i39._5eSPD47bv8&ved=0ahUKEwiWrJvwwP7mAhVfwTgGHfsNDxsQ4dUDCAs&uact=5"
             webbrowser.get().open(url)
             speak("Here is what the weather is looking like")
-
-        #10 stone paper scisorrs
-        if there_exists(["play rock paper scissor"]):
-            voice_data = record_audio("choose among rock paper or scissor")
-            moves=["Rock", "Paper", "Scissor"]
-        
-            cmove=random.choice(moves)
-            pmove=voice_data
-            
-            speak("Rock")
-            speak("Paper")
-            speak("Scissor")
-            speak("Shoot!")
-            speak("The computer chose " + cmove)
-            speak("You chose " + pmove)
-            #engine_speak("hi")
-            if pmove==cmove:
-                speak("the match is draw")
-            elif pmove== "rock" and cmove== "scissor":
-                speak("Player wins")
-            elif pmove== "rock" and cmove== "paper":
-                speak("Computer wins")
-            elif pmove== "paper" and cmove== "rock":
-                speak("Player wins")
-            elif pmove== "paper" and cmove== "scissor":
-                speak("Computer wins")
-            elif pmove== "scissor" and cmove== "paper":
-                speak("Player wins")
-            elif pmove== "scissor" and cmove== "rock":
-                speak("Computer wins")
 
         #11 toss a coin
         if there_exists(["toss","flip","coin"]):
@@ -211,32 +147,6 @@ def runAI():
                 speak(int(voice_data.split()[0]) ** int(voice_data.split()[2]))
             else:
                 speak("Wrong Operator")
-            
-        #13 screenshot
-        if there_exists(["capture","my screen","screenshot"]):
-            myScreenshot = pyautogui.screenshot()
-            r = random.randint(1,20000000)
-            ssName = 'screenshot' + str(r) + '.png'
-            myScreenshot.save('C:/Users/pc/Desktop/U.N.I.T. Project/screenshots/'+ssName)
-        
-        
-        #14 to search wikipedia for definition
-        if there_exists(["definition of"]):
-            definition=record_audio("what do you need the definition of")
-            url=urllib.request.urlopen('https://en.wikipedia.org/wiki/'+definition)
-            soup=bs.BeautifulSoup(url,'lxml')
-            definitions=[]
-            for paragraph in soup.find_all('p'):
-                definitions.append(str(paragraph.text))
-            if definitions:
-                if definitions[0]:
-                    speak('im sorry i could not find that definition, please try a web search')
-                elif definitions[1]:
-                    speak('here is what i found '+definitions[1])
-                else:
-                    speak ('Here is what i found '+definitions[2])
-            else:
-                    speak("im sorry i could not find the definition for "+definition)
 
         if there_exists(["what is my exact location"]):
             url = "https://www.google.com/maps/search/Where+am+I+?/"
@@ -249,7 +159,7 @@ def runAI():
             
 
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     person_obj = person()
     unit_obj = unit()
@@ -262,18 +172,15 @@ def runAI():
 
 root = tk.Tk()
 
-canvas = tk.Canvas(root, height= 400, width=600, bg="#1A6BBC")
+canvas = tk.Canvas(root, height= 400, width=600, bg="#141414")
 canvas.pack()
 
-frame = tkinter.scrolledtext.ScrolledText(root, bg="#1C2833")
-frame.place(relwidth=0.8, relheight=0.4, relx=0.1, rely=0.1)
-frame.config(state='disabled')
+frame = LabelFrame(canvas, padx=100, pady=100, bg="#141414")
+frame.pack()
 
-buttonFrame = tk.Frame(bg="#1C2833")
-buttonFrame.place(relwidth=0.5, relheight=0.1, relx=0.252, rely=0.7)
-
-runProgram = tk.Button(buttonFrame, text="Talk to U.N.I.T", padx=10, pady = 5, fg = "#33C518", bg = "#1C2833", command = runAI)
-runProgram.pack()
+runProgram = tk.Button(frame, text="Talk to U.N.I.T", padx=10, pady = 5, fg = "#e8e8e8", bg = "#1C2833", command = runAI)
+runProgram.grid(row=1,column=0,pady=50)
 
 
 root.mainloop()
+
