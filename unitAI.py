@@ -17,6 +17,9 @@ import urllib.request
 import tkinter as tk
 from tkinter import *
 import tkinter.scrolledtext
+from ServoController import *
+
+robot = ServoController()
 
 
 def runAI():
@@ -86,6 +89,7 @@ def runAI():
         if there_exists(['hey','hi','hello']):
             greetings = [f"hey, how can I help you {person_obj.name}", f"hey, what's up? {person_obj.name}", f"I'm listening {person_obj.name}", f"how can I help you? {person_obj.name}", f"hello {person_obj.name}"]
             greet = greetings[random.randint(0,len(greetings)-1)]
+            robot.testMove()
             speak(greet)
 
         # 2: name
