@@ -17,30 +17,30 @@ class ServoController(object):
 
     def __init__(self):
         print("in __init__")
-        self.board = pyfirmata.ArduinoMega('COM5')
+        self.board = pyfirmata.ArduinoMega('COM7')
     
     #    self.board.servo_config(3, angle = self.theta0)
     #    self.servo0 = self.board.get_pin('d:3:s')
     #    self.servo0.write(self.theta0)
+        #joint 4
+        self.board.servo_config(8, angle = 0)
+        self.servo4 = self.board.get_pin('d:8:s')
+        self.servo4.write(0)
 
-    #    self.board.servo_config(5, angle = self.theta1)
-    #    self.servo1 = self.board.get_pin('d:5:s')
-    #    self.servo1.write(self.theta1)
-
-        #joint 5
-        self.board.servo_config(11, angle = 0)
-        self.servo2 = self.board.get_pin('d:11:s')
-        self.servo2.write(self.theta2)
+    #    #joint 1
+    #    self.board.servo_config(11, angle = 0)
+    #    self.servo1 = self.board.get_pin('d:11:s')
+    #    self.servo1.write(0)
 
         #joint 3
-    #    self.board.servo_config(9, angle = self.theta3)
+    #    self.board.servo_config(9, angle = 0)
     #    self.servo3 = self.board.get_pin('d:9:s')
-    #    self.servo3.write(self.theta3)
+    #    self.servo3.write(0)
 
-        #joint 4
-    #    self.board.servo_config(10, angle = 90.0)
-    #    self.servo4 = self.board.get_pin('d:10:s')
-    #    self.servo4.write(90.0)
+        #joint 2
+    #   self.board.servo_config(10, angle = 0)
+    #    self.servo2 = self.board.get_pin('d:10:s')
+    #    self.servo2.write(0)
 
     def __del__(self):
         print("in __del__")
@@ -48,13 +48,32 @@ class ServoController(object):
         self.board.exit()
 
     def wave(self):
+        self.servo4.write(0)
         for j in range(5):
             for x in range (0,61):
-                self.servo2.write(x)
+                self.servo4.write(x)
                 time.sleep(0.005)
             for x in range (59,0,-1):
-                self.servo2.write(x)
+                self.servo4.write(x)
                 time.sleep(0.005)
+    
+    #def move2And3(self):
+    #    self.servo2.write(90.1)
+    #    time.sleep(0.05)
+    #    self.servo2.write(89.9)
+    #    time.sleep(0.05)
+    #    self.servo3.write(90.1)
+    #    time.sleep(0.08)
+    #    self.servo3.write(89.9)
+
+    #def baseSpin(self):
+    #    for j in range(2):
+    #        self.servo1.write(90.1)
+    #        time.sleep(0.5)
+    #    for x in range(2):
+    #        self.servo1.write(89.9)
+    #        time.sleep(0.5)
+            #self.servo1.write(90)
 
     def set0(self, theta0_desired):
         theta0_desired = max(theta0_desired, 0.0)

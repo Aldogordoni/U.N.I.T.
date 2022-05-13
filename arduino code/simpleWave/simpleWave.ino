@@ -9,7 +9,7 @@ Servo servo4;
 // twelve servo objects can be created on most boards
 
 int pos = 0;    // variable to store the servo position
-//int pos2 = 30;
+int pos2 = 30;
 
 void setup() {
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object

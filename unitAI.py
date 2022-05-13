@@ -64,16 +64,6 @@ def runAI():
             print(f">> {voice_data.lower()}") # print what user said
             return voice_data.lower()
 
-    # get string and make a audio file to be played
-    #def speak(audio_string):
-    #    tts = gTTS(text=audio_string, lang='en') # text to speech(voice)
-    #    r = random.randint(1,20000000)
-    #    audio_file = 'audio' + str(r) + '.mp3'
-    #    tts.save(audio_file) # save as mp3
-    #    playsound.playsound(audio_file) # play the audio file
-    #    print(f"U.N.I.T: {audio_string}") # print what app said
-    #    os.remove(audio_file) # remove audio file
-
     def speak(audio):
         engine.say(audio)
         message = audio +"\n"
@@ -89,7 +79,7 @@ def runAI():
         if there_exists(['hey','hi','hello']):
             greetings = [f"hey, how can I help you {person_obj.name}", f"hey, what's up? {person_obj.name}", f"I'm listening {person_obj.name}", f"how can I help you? {person_obj.name}", f"hello {person_obj.name}"]
             greet = greetings[random.randint(0,len(greetings)-1)]
-            robot.testMove()
+            robot.wave()
             speak(greet)
 
         # 2: name
@@ -98,14 +88,6 @@ def runAI():
                 speak(f"my name is {unit_obj.name}, {person_obj.name}")
             else:
                 speak("my name is UNIT, pretty cool right? What's yours?")
-
-        if there_exists(["who is dennis"]):
-            speak(f"Dennis is the little bitch that has to build my body which is taking forever to complete. Tell him to hurry up")
-
-        if there_exists(["my name is"]):
-            person_name = voice_data.split("is")[-1].strip()
-            speak(f"okay, i will remember that {person_name}")
-            person_obj.setName(person_name) # remember name in person object
 
         # 3: greeting
         if there_exists(["how are you","how are you doing"]):
@@ -122,36 +104,19 @@ def runAI():
             time = f'{hours} {minutes}'
             speak(time)
 
-        #8: get weather
+        #5: get weather
         if there_exists(["weather"]):
             search_term = voice_data.split("for")[-1]
             url = "https://www.google.com/search?sxsrf=ACYBGNSQwMLDByBwdVFIUCbQqya-ET7AAA%3A1578847393212&ei=oUwbXtbXDN-C4-EP-5u82AE&q=weather&oq=weather&gs_l=psy-ab.3..35i39i285i70i256j0i67l4j0i131i67j0i131j0i67l2j0.1630.4591..5475...1.2..2.322.1659.9j5j0j1......0....1..gws-wiz.....10..0i71j35i39j35i362i39._5eSPD47bv8&ved=0ahUKEwiWrJvwwP7mAhVfwTgGHfsNDxsQ4dUDCAs&uact=5"
             webbrowser.get().open(url)
             speak("Here is what the weather is looking like")
 
-        #11 toss a coin
+        #6 toss a coin
         if there_exists(["toss","flip","coin"]):
             moves=["head", "tails"]   
             cmove=random.choice(moves)
             speak("It's " + cmove)
-
-        #12 calc
-        if there_exists(["plus","minus","multiply","divide","power","+","-","*","/"]):
-            opr = voice_data.split()[1]
-
-            if opr == '+':
-                speak(int(voice_data.split()[0]) + int(voice_data.split()[2]))
-            elif opr == '-':
-                speak(int(voice_data.split()[0]) - int(voice_data.split()[2]))
-            elif opr == 'multiply' or 'x':
-                speak(int(voice_data.split()[0]) * int(voice_data.split()[2]))
-            elif opr == 'divide':
-                speak(int(voice_data.split()[0]) / int(voice_data.split()[2]))
-            elif opr == 'power':
-                speak(int(voice_data.split()[0]) ** int(voice_data.split()[2]))
-            else:
-                speak("Wrong Operator")
-
+        #7
         if there_exists(["what is my exact location"]):
             url = "https://www.google.com/maps/search/Where+am+I+?/"
             webbrowser.get().open(url)
