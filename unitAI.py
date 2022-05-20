@@ -17,6 +17,9 @@ import urllib.request
 import tkinter as tk
 from tkinter import *
 import tkinter.scrolledtext
+from ServoController import *
+
+robot = ServoController()
 
 
 
@@ -79,6 +82,7 @@ def runAI():
         if there_exists(['hey','hi','hello']):
             greetings = [f"hey, how can I help you {person_obj.name}", f"hey, what's up? {person_obj.name}", f"I'm listening {person_obj.name}", f"how can I help you? {person_obj.name}", f"hello {person_obj.name}"]
             greet = greetings[random.randint(0,len(greetings)-1)]
+            robot.wave()
             speak(greet)
 
         # 2: name
@@ -88,12 +92,7 @@ def runAI():
             else:
                 speak("my name is UNIT, pretty cool right? What's yours?")
 
-        if there_exists(["my name is"]):
-            person_name = voice_data.split("is")[-1].strip()
-            speak(f"okay, i will remember that {person_name}")
-            person_obj.setName(person_name) # remember name in person object
-
-        # greeting
+        # 3: greeting
         if there_exists(["how are you","how are you doing"]):
             speak(f"I'm very well, thanks for asking {person_obj.name}")
 
@@ -108,13 +107,24 @@ def runAI():
             time = f'{hours} {minutes}'
             speak("it's "+time)
 
-        # toss a coin
+        #5: get weather
+        if there_exists(["weather"]):
+            search_term = voice_data.split("for")[-1]
+            url = "https://www.google.com/search?sxsrf=ACYBGNSQwMLDByBwdVFIUCbQqya-ET7AAA%3A1578847393212&ei=oUwbXtbXDN-C4-EP-5u82AE&q=weather&oq=weather&gs_l=psy-ab.3..35i39i285i70i256j0i67l4j0i131i67j0i131j0i67l2j0.1630.4591..5475...1.2..2.322.1659.9j5j0j1......0....1..gws-wiz.....10..0i71j35i39j35i362i39._5eSPD47bv8&ved=0ahUKEwiWrJvwwP7mAhVfwTgGHfsNDxsQ4dUDCAs&uact=5"
+            webbrowser.get().open(url)
+            speak("Here is what the weather is looking like")
+
+        #6 toss a coin
         if there_exists(["toss","flip","coin"]):
             moves=["head", "tails"]   
             cmove=random.choice(moves)
             speak("It's " + cmove)
+        #7
+        if there_exists(["what is my exact location"]):
+            url = "https://www.google.com/maps/search/Where+am+I+?/"
+            webbrowser.get().open(url)
+            speak("You must be somewhere near here, as per Google maps")
 
-        # exit
         if there_exists(["exit", "quit", "goodbye"]):
             speak("going offline")
             exit()

@@ -1,0 +1,4 @@
+-> make new cmd terminal (command prompt)
+-> close powershell
+cd UNIT
+python unitAI.py
