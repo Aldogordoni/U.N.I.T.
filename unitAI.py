@@ -19,6 +19,7 @@ from tkinter import *
 import tkinter.scrolledtext
 
 
+
 def runAI():
     runProgram.destroy
     engine = pyttsx3.init(driverName = 'sapi5')
@@ -31,6 +32,8 @@ def runAI():
         def setName(self, name):
             self.name = name
 
+    
+    
     class unit:
         name = 'UNIT'
         def setName(self, name):
@@ -61,16 +64,6 @@ def runAI():
             print(f">> {voice_data.lower()}") # print what user said
             return voice_data.lower()
 
-    # get string and make a audio file to be played
-    #def speak(audio_string):
-    #    tts = gTTS(text=audio_string, lang='en') # text to speech(voice)
-    #    r = random.randint(1,20000000)
-    #    audio_file = 'audio' + str(r) + '.mp3'
-    #    tts.save(audio_file) # save as mp3
-    #    playsound.playsound(audio_file) # play the audio file
-    #    print(f"U.N.I.T: {audio_string}") # print what app said
-    #    os.remove(audio_file) # remove audio file
-
     def speak(audio):
         engine.say(audio)
         message = audio +"\n"
@@ -82,7 +75,7 @@ def runAI():
         engine.runAndWait()
 
     def respond(voice_data):
-        # 1: greeting
+        # greeting
         if there_exists(['hey','hi','hello']):
             greetings = [f"hey, how can I help you {person_obj.name}", f"hey, what's up? {person_obj.name}", f"I'm listening {person_obj.name}", f"how can I help you? {person_obj.name}", f"hello {person_obj.name}"]
             greet = greetings[random.randint(0,len(greetings)-1)]
@@ -95,19 +88,16 @@ def runAI():
             else:
                 speak("my name is UNIT, pretty cool right? What's yours?")
 
-        if there_exists(["who is dennis"]):
-            speak(f"Dennis is the little bitch that has to build my body which is taking forever to complete. Tell him to hurry up")
-
         if there_exists(["my name is"]):
             person_name = voice_data.split("is")[-1].strip()
             speak(f"okay, i will remember that {person_name}")
             person_obj.setName(person_name) # remember name in person object
 
-        # 3: greeting
+        # greeting
         if there_exists(["how are you","how are you doing"]):
             speak(f"I'm very well, thanks for asking {person_obj.name}")
 
-        # 4: time
+        # time
         if there_exists(["what's the time","tell me the time","what time is it"]):
             time = ctime().split(" ")[3].split(":")[0:2]
             if time[0] == "00":
@@ -116,43 +106,15 @@ def runAI():
                 hours = time[0]
             minutes = time[1]
             time = f'{hours} {minutes}'
-            speak(time)
+            speak("it's "+time)
 
-        #8: get weather
-        if there_exists(["weather"]):
-            search_term = voice_data.split("for")[-1]
-            url = "https://www.google.com/search?sxsrf=ACYBGNSQwMLDByBwdVFIUCbQqya-ET7AAA%3A1578847393212&ei=oUwbXtbXDN-C4-EP-5u82AE&q=weather&oq=weather&gs_l=psy-ab.3..35i39i285i70i256j0i67l4j0i131i67j0i131j0i67l2j0.1630.4591..5475...1.2..2.322.1659.9j5j0j1......0....1..gws-wiz.....10..0i71j35i39j35i362i39._5eSPD47bv8&ved=0ahUKEwiWrJvwwP7mAhVfwTgGHfsNDxsQ4dUDCAs&uact=5"
-            webbrowser.get().open(url)
-            speak("Here is what the weather is looking like")
-
-        #11 toss a coin
+        # toss a coin
         if there_exists(["toss","flip","coin"]):
             moves=["head", "tails"]   
             cmove=random.choice(moves)
             speak("It's " + cmove)
 
-        #12 calc
-        if there_exists(["plus","minus","multiply","divide","power","+","-","*","/"]):
-            opr = voice_data.split()[1]
-
-            if opr == '+':
-                speak(int(voice_data.split()[0]) + int(voice_data.split()[2]))
-            elif opr == '-':
-                speak(int(voice_data.split()[0]) - int(voice_data.split()[2]))
-            elif opr == 'multiply' or 'x':
-                speak(int(voice_data.split()[0]) * int(voice_data.split()[2]))
-            elif opr == 'divide':
-                speak(int(voice_data.split()[0]) / int(voice_data.split()[2]))
-            elif opr == 'power':
-                speak(int(voice_data.split()[0]) ** int(voice_data.split()[2]))
-            else:
-                speak("Wrong Operator")
-
-        if there_exists(["what is my exact location"]):
-            url = "https://www.google.com/maps/search/Where+am+I+?/"
-            webbrowser.get().open(url)
-            speak("You must be somewhere near here, as per Google maps")
-
+        # exit
         if there_exists(["exit", "quit", "goodbye"]):
             speak("going offline")
             exit()
@@ -162,12 +124,15 @@ def runAI():
     time.sleep(0.5)
 
     person_obj = person()
+    print(person_obj.name + "---")
     unit_obj = unit()
 
 
     #while(1):
     voice_data = record_audio() # get the voice input 
     respond(voice_data) # respond
+
+    
 
 
 root = tk.Tk()
